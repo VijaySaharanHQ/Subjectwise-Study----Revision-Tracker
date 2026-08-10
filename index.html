@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Study Tracker Ultimate v4.0 with Pomodoro & Streak</title>
+  <title>Study Tracker Ultimate v5.0</title>
   <style>
     :root[data-theme="dark"] {
       --bg-color: #0b0f19;
@@ -35,340 +35,81 @@
       --input-bg: #f8fafc;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text-main); padding: 20px 16px; max-width: 1400px; margin: 0 auto; transition: all 0.3s; }
+    
+    header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
+    h1 { color: var(--accent); font-size: 26px; }
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      padding: 24px 16px;
-      max-width: 1380px;
-      margin: 0 auto;
-      transition: background-color 0.3s, color 0.3s;
-    }
+    /* Top Grid Layout */
+    .top-widgets-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 20px; }
+    @media (min-width: 992px) { .top-widgets-grid { grid-template-columns: 1fr 1fr; } }
 
-    header {
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
+    .widget-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; }
+    .widget-card h3 { font-size: 13px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
 
-    h1 {
-      color: var(--accent);
-      font-size: 26px;
-      letter-spacing: -0.5px;
-    }
+    /* Daily Targets Widget */
+    .target-input-group { display: flex; gap: 8px; margin-bottom: 8px; }
+    .target-list { display: flex; flex-direction: column; gap: 6px; }
+    .target-item { display: flex; align-items: center; gap: 8px; font-size: 13px; background: var(--input-bg); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); }
 
-    /* Stats Cards */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-      margin-bottom: 20px;
-    }
+    /* Stats Grid */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .stat-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; text-align: center; }
+    .stat-number { font-size: 20px; font-weight: 700; color: var(--accent); margin-top: 4px; }
 
-    .stat-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 14px;
-      text-align: center;
-    }
+    /* Pomodoro Timer */
+    .pomo-modes { display: flex; gap: 6px; margin-bottom: 10px; }
+    .timer-display { font-size: 38px; font-weight: 800; color: var(--accent); margin: 6px 0; }
 
-    .stat-number {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--accent);
-      margin-top: 4px;
+    /* Forms and Controls */
+    .control-panel { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 24px; }
+    @media (min-width: 992px) { .control-panel { grid-template-columns: 1.2fr 1fr; } }
+
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+
+    input, select, button, textarea {
+      padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color);
+      background-color: var(--input-bg); color: var(--text-main); font-size: 13px; outline: none;
     }
+    textarea { resize: vertical; min-height: 32px; font-size: 12px; }
+
+    button { background-color: var(--accent); color: #fff; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; }
+    button:hover { opacity: 0.9; }
+    
+    .btn-secondary { background-color: var(--header-bg); color: var(--text-main); }
+    .btn-danger { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid var(--danger); padding: 4px 8px; font-size: 11px; }
+
+    /* Table & Card Layout */
+    .subject-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 20px; overflow: hidden; }
+    .subject-header { background-color: var(--header-bg); padding: 12px 18px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+    .book-block { padding: 16px; border-bottom: 1px dashed var(--border-color); }
+    .book-title { font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 10px; }
+
+    .table-responsive { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+    th, td { padding: 8px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+    th { color: var(--text-muted); font-weight: 500; }
+
+    /* Status & Log Buttons */
+    .status-btn { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid transparent; width: 90px; text-align: center; }
+    .status-not-done { background: rgba(239, 68, 68, 0.15); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
+    .status-in-progress { background: rgba(245, 158, 11, 0.15); color: var(--warning); border-color: rgba(245, 158, 11, 0.3); }
+    .status-done { background: rgba(34, 197, 94, 0.15); color: var(--success); border-color: rgba(34, 197, 94, 0.3); }
+
+    .difficulty-btn { padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid var(--border-color); background: var(--input-bg); cursor: pointer; }
+    .diff-easy { color: var(--success); border-color: var(--success); }
+    .diff-tough { color: var(--danger); border-color: var(--danger); }
 
     /* Progress Bar */
-    .progress-wrapper {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 18px;
-      margin-bottom: 20px;
-    }
+    .progress-wrapper { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; margin-bottom: 20px; }
+    .progress-bar-container { background-color: var(--input-bg); border-radius: 9999px; height: 10px; overflow: hidden; margin-top: 6px; border: 1px solid var(--border-color); }
+    .progress-bar-fill { background: linear-gradient(90deg, var(--accent), var(--success)); height: 100%; width: 0%; transition: width 0.4s ease; }
 
-    .progress-bar-container {
-      background-color: var(--input-bg);
-      border-radius: 9999px;
-      height: 12px;
-      overflow: hidden;
-      margin-top: 8px;
-      border: 1px solid var(--border-color);
-    }
-
-    .progress-bar-fill {
-      background: linear-gradient(90deg, var(--accent), var(--success));
-      height: 100%;
-      width: 0%;
-      transition: width 0.5s ease;
-    }
-
-    /* Controls Panel */
-    .control-panel {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    @media (min-width: 992px) {
-      .control-panel {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    .panel-card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .panel-card h3 {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 8px;
-    }
-
-    input, select, button {
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-      background-color: var(--input-bg);
-      color: var(--text-main);
-      font-size: 13px;
-      outline: none;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--accent);
-    }
-
-    button {
-      background-color: var(--accent);
-      color: #fff;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      transition: opacity 0.2s, transform 0.1s;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
-    button:active {
-      transform: scale(0.98);
-    }
-
-    .btn-danger {
-      background-color: rgba(239, 68, 68, 0.15);
-      color: var(--danger);
-      border: 1px solid var(--danger);
-      padding: 4px 8px;
-      font-size: 11px;
-    }
-
-    .btn-danger:hover {
-      background-color: var(--danger);
-      color: #fff;
-    }
-
-    .btn-secondary {
-      background-color: var(--header-bg);
-      color: var(--text-main);
-    }
-
-    /* Pomodoro Widget Styling */
-    .pomodoro-container {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 18px;
-      margin-bottom: 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .pomo-modes {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .pomo-mode-btn {
-      background: var(--input-bg);
-      color: var(--text-muted);
-      border: 1px solid var(--border-color);
-      font-size: 12px;
-      padding: 6px 12px;
-    }
-
-    .pomo-mode-btn.active {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-    }
-
-    .timer-display {
-      font-size: 48px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      color: var(--accent);
-      margin: 10px 0;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .pomo-controls {
-      display: flex;
-      gap: 10px;
-    }
-
-    .pomo-controls button {
-      min-width: 80px;
-      padding: 8px 16px;
-    }
-
-    /* Priority Badges */
-    .badge-priority {
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-    .p-high { background-color: rgba(239, 68, 68, 0.2); color: #f87171; }
-    .p-medium { background-color: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-    .p-low { background-color: rgba(56, 189, 248, 0.2); color: #38bdf8; }
-
-    /* Tables & Cards */
-    .subject-card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
-
-    .subject-header {
-      background-color: var(--header-bg);
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .book-block {
-      padding: 16px 18px;
-      border-bottom: 1px dashed var(--border-color);
-    }
-
-    .book-block:last-child {
-      border-bottom: none;
-    }
-
-    .book-title {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-
-    .table-responsive {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 12px;
-    }
-
-    th, td {
-      padding: 10px 8px;
-      border-bottom: 1px solid var(--border-color);
-      vertical-align: middle;
-    }
-
-    th {
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    /* Status Buttons */
-    .status-btn {
-      padding: 5px 8px;
-      border-radius: 16px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid transparent;
-      width: 95px;
-      text-align: center;
-    }
-
-    .status-not-done {
-      background-color: rgba(239, 68, 68, 0.15);
-      color: var(--danger);
-      border-color: rgba(239, 68, 68, 0.3);
-    }
-
-    .status-in-progress {
-      background-color: rgba(245, 158, 11, 0.15);
-      color: var(--warning);
-      border-color: rgba(245, 158, 11, 0.3);
-    }
-
-    .status-done {
-      background-color: rgba(34, 197, 94, 0.15);
-      color: var(--success);
-      border-color: rgba(34, 197, 94, 0.3);
-    }
-
-    .due-alert {
-      font-size: 10px;
-      background: rgba(239, 68, 68, 0.2);
-      color: #f87171;
-      padding: 2px 4px;
-      border-radius: 3px;
-      display: inline-block;
-      margin-top: 2px;
-    }
-
-    /* Print Formatting */
     @media print {
-      body { background: #fff; color: #000; padding: 0; }
-      .control-panel, header button, .btn-danger, .stats-grid, .pomodoro-container { display: none !important; }
-      .subject-card { border: 1px solid #ccc; page-break-inside: avoid; }
-      th, td { border-bottom: 1px solid #eee; }
-      .status-btn { border: 1px solid #aaa; color: #000 !important; background: none !important; }
+      .control-panel, header button, .btn-danger, .stats-grid, .top-widgets-grid { display: none !important; }
+      body { background: #fff; color: #000; }
+      .subject-card { border: 1px solid #ccc; }
     }
   </style>
 </head>
@@ -376,14 +117,42 @@
 
   <header>
     <div>
-      <h1>Study Tracker Ultimate</h1>
-      <p style="color: var(--text-muted); font-size: 13px;">Advanced Revision, Pomodoro Timer & Streak Counter</p>
+      <h1>Study Tracker Pro v5.0</h1>
+      <p style="color: var(--text-muted); font-size: 12px;">Daily Goals, Targets, Log Notes & Export Options</p>
     </div>
     <div style="display: flex; gap: 8px;">
-      <button class="btn-secondary" onclick="toggleTheme()">🌓 Toggle Theme</button>
-      <button class="btn-secondary" onclick="window.print()">🖨️ Print / Save PDF</button>
+      <button class="btn-secondary" onclick="requestNotificationPermission()">🔔 Notify Me</button>
+      <button class="btn-secondary" id="theme-toggle-btn" onclick="toggleTheme()">☀️ Light Mode</button>
+      <button class="btn-secondary" onclick="window.print()">🖨️ PDF / Print</button>
     </div>
   </header>
+
+  <!-- Daily Targets + Pomodoro Widgets -->
+  <div class="top-widgets-grid">
+    <!-- Daily 3 Targets Widget -->
+    <div class="widget-card">
+      <h3>🎯 Aaj Ke 3 Main Targets</h3>
+      <div class="target-input-group">
+        <input type="text" id="target-input" placeholder="Enter today's target (e.g. Physics Ch-2 PYQs)" style="flex: 1;">
+        <button onclick="addDailyTarget()">Add Goal</button>
+      </div>
+      <div class="target-list" id="target-list-container"></div>
+    </div>
+
+    <!-- Pomodoro Timer Widget -->
+    <div class="widget-card" style="text-align: center;">
+      <h3>⏱️ Focus Pomodoro Timer</h3>
+      <div class="pomo-modes" style="justify-content: center;">
+        <button class="btn-secondary" onclick="setTimerMode(25)">Study (25m)</button>
+        <button class="btn-secondary" onclick="setTimerMode(5)">Break (5m)</button>
+      </div>
+      <div class="timer-display" id="timer-display">25:00</div>
+      <div style="display: flex; gap: 8px; justify-content: center;">
+        <button id="pomo-start-btn" onclick="toggleTimer()">Start</button>
+        <button class="btn-secondary" onclick="resetTimer()">Reset</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Top Stats -->
   <div class="stats-grid">
@@ -403,29 +172,11 @@
       <div style="color: var(--text-muted); font-size: 11px;">IN PROGRESS</div>
       <div class="stat-number" style="color: var(--warning);" id="stat-progress">0</div>
     </div>
-    <div class="stat-card">
-      <div style="color: var(--text-muted); font-size: 11px;">REVISION DUE</div>
-      <div class="stat-number" style="color: var(--danger);" id="stat-due">0</div>
-    </div>
-  </div>
-
-  <!-- Pomodoro Timer Widget -->
-  <div class="pomodoro-container">
-    <div class="pomo-modes">
-      <button class="pomo-mode-btn active" id="mode-work" onclick="setTimerMode(25, 'work')">⏱️ Study (25m)</button>
-      <button class="pomo-mode-btn" id="mode-short" onclick="setTimerMode(5, 'short')">☕ Short Break (5m)</button>
-      <button class="pomo-mode-btn" id="mode-long" onclick="setTimerMode(15, 'long')">🌴 Long Break (15m)</button>
-    </div>
-    <div class="timer-display" id="timer-display">25:00</div>
-    <div class="pomo-controls">
-      <button id="pomo-start-btn" onclick="toggleTimer()">Start</button>
-      <button class="btn-secondary" onclick="resetTimer()">Reset</button>
-    </div>
   </div>
 
   <!-- Progress Bar -->
   <div class="progress-wrapper">
-    <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 13px;">
+    <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 12px;">
       <span>Overall Preparation Level</span>
       <span id="progress-percent" style="color: var(--accent);">0%</span>
     </div>
@@ -437,7 +188,7 @@
   <!-- Control Panel -->
   <div class="control-panel">
     <!-- Add Chapter Form -->
-    <div class="panel-card">
+    <div class="widget-card">
       <h3>Add New Chapter</h3>
       <form id="add-chapter-form" onsubmit="addEntry(event)">
         <div class="form-grid">
@@ -455,43 +206,37 @@
       </form>
     </div>
 
-    <!-- Filter & Customization Panel -->
-    <div class="panel-card">
-      <h3>Search, Filter & Customization</h3>
+    <!-- Filters and Exports -->
+    <div class="widget-card">
+      <h3>Filter & Export Options</h3>
       <div class="form-grid" style="margin-bottom: 8px;">
-        <select id="filter-subject" onchange="renderTracker()">
-          <option value="ALL">All Subjects</option>
-        </select>
-        <select id="filter-priority" onchange="renderTracker()">
-          <option value="ALL">All Priorities</option>
-          <option value="HIGH">High Priority</option>
-          <option value="MEDIUM">Medium Priority</option>
-          <option value="LOW">Low Priority</option>
-        </select>
+        <select id="filter-subject" onchange="renderTracker()"><option value="ALL">All Subjects</option></select>
         <select id="filter-status" onchange="renderTracker()">
           <option value="ALL">All Statuses</option>
           <option value="DONE">Completed</option>
           <option value="IN_PROGRESS">In Progress</option>
           <option value="NOT_STARTED">Not Started</option>
         </select>
-        <input type="text" id="search-input" placeholder="Search chapters..." oninput="renderTracker()">
+        <input type="text" id="search-input" placeholder="Search..." oninput="renderTracker()" style="grid-column: 1 / -1;">
       </div>
       <div style="display: flex; gap: 6px;">
-        <input type="text" id="custom-task-input" placeholder="Add Custom Column" style="flex: 1;">
-        <button onclick="addCustomTaskColumn()">+ Column</button>
-        <button class="btn-secondary" onclick="exportData()">Export</button>
-        <button class="btn-secondary" onclick="document.getElementById('import-file').click()">Import</button>
+        <button class="btn-secondary" onclick="exportCSV()" style="flex: 1;">📊 Export CSV</button>
+        <button class="btn-secondary" onclick="exportJSON()" style="flex: 1;">💾 Backup JSON</button>
+        <button class="btn-secondary" onclick="document.getElementById('import-file').click()" style="flex: 1;">📥 Import</button>
         <input type="file" id="import-file" style="display: none;" onchange="importData(event)" accept=".json">
       </div>
     </div>
   </div>
 
-  <!-- Tracker Output Container -->
+  <!-- Main Chapters Container -->
   <div id="tracker-container"></div>
 
   <script>
-    let studyData = JSON.parse(localStorage.getItem('studyTrackerV4Data')) || [];
-    let customTasks = JSON.parse(localStorage.getItem('studyTrackerV4CustomTasks')) || [
+    let studyData = JSON.parse(localStorage.getItem('studyTrackerV5Data')) || [];
+    let dailyTargets = JSON.parse(localStorage.getItem('studyTrackerV5Targets')) || [];
+    let streakData = JSON.parse(localStorage.getItem('studyTrackerV5Streak')) || { count: 0, lastActivityDate: null };
+
+    const customTasks = [
       { key: 'notes', label: 'Notes' },
       { key: 'revision', label: 'Revision' },
       { key: 'questionPractice', label: 'Q-Practice' },
@@ -499,134 +244,107 @@
       { key: 'extraPractice', label: 'Extra Practice' }
     ];
 
-    // Streak System State
-    let streakData = JSON.parse(localStorage.getItem('studyTrackerV4Streak')) || {
-      count: 0,
-      lastActivityDate: null
-    };
-
     const STATUS_STATES = {
       0: { label: 'Not Started', class: 'status-not-done' },
       1: { label: 'In Progress', class: 'status-in-progress' },
       2: { label: 'Done', class: 'status-done' }
     };
 
-    // Pomodoro Timer State
-    let timerDuration = 25 * 60;
-    let timerRemaining = 25 * 60;
-    let timerInterval = null;
-    let isTimerRunning = false;
-
-    function saveData() {
-      localStorage.setItem('studyTrackerV4Data', JSON.stringify(studyData));
-      localStorage.setItem('studyTrackerV4CustomTasks', JSON.stringify(customTasks));
-      localStorage.setItem('studyTrackerV4Streak', JSON.stringify(streakData));
-      populateSubjectFilter();
-      renderTracker();
+    /* Theme Toggle */
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      document.getElementById('theme-toggle-btn').innerText = next === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
     }
 
+    /* Notifications */
+    function requestNotificationPermission() {
+      if ('Notification' in window) {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            new Notification('Study Tracker', { body: 'Notifications enabled! We will remind you of pending goals.' });
+          }
+        });
+      }
+    }
+
+    function sendBrowserNotification(text) {
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('Study Reminder', { body: text });
+      }
+    }
+
+    /* Target System */
+    function addDailyTarget() {
+      const input = document.getElementById('target-input');
+      const val = input.value.trim();
+      if (!val) return;
+      if (dailyTargets.length >= 3) {
+        alert('Daily goal limit (3 targets) reached for focus!');
+      }
+      dailyTargets.push({ id: Date.now(), text: val, done: false });
+      input.value = '';
+      saveData();
+    }
+
+    function toggleTarget(id) {
+      const target = dailyTargets.find(t => t.id === id);
+      if (target) target.done = !target.done;
+      saveData();
+    }
+
+    function deleteTarget(id) {
+      dailyTargets = dailyTargets.filter(t => t.id !== id);
+      saveData();
+    }
+
+    function renderTargets() {
+      const container = document.getElementById('target-list-container');
+      container.innerHTML = '';
+      if (dailyTargets.length === 0) {
+        container.innerHTML = `<span style="font-size:12px; color:var(--text-muted);">No targets set for today. Add up to 3 goals.</span>`;
+        return;
+      }
+      dailyTargets.forEach(t => {
+        const item = document.createElement('div');
+        item.className = 'target-item';
+        item.innerHTML = `
+          <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTarget(${t.id})">
+          <span style="flex:1; ${t.done ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${t.text}</span>
+          <button class="btn-danger" style="padding: 2px 6px;" onclick="deleteTarget(${t.id})">✕</button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    /* Streak & Storage */
     function recordActivity() {
       const today = new Date().toISOString().slice(0, 10);
-      
       if (!streakData.lastActivityDate) {
         streakData.count = 1;
         streakData.lastActivityDate = today;
       } else if (streakData.lastActivityDate !== today) {
-        const lastDate = new Date(streakData.lastActivityDate);
-        const currentDate = new Date(today);
-        const diffDays = Math.round((currentDate - lastDate) / (1000 * 60 * 60 * 24));
-
-        if (diffDays === 1) {
-          streakData.count += 1;
-        } else if (diffDays > 1) {
-          streakData.count = 1; // Streak broken
-        }
+        const diff = Math.round((new Date(today) - new Date(streakData.lastActivityDate)) / (1000 * 60 * 60 * 24));
+        if (diff === 1) streakData.count++;
+        else if (diff > 1) streakData.count = 1;
         streakData.lastActivityDate = today;
       }
-      localStorage.setItem('studyTrackerV4Streak', JSON.stringify(streakData));
-      updateStreakDisplay();
-    }
-
-    function checkStreakValidity() {
-      if (streakData.lastActivityDate) {
-        const today = new Date().toISOString().slice(0, 10);
-        const lastDate = new Date(streakData.lastActivityDate);
-        const currentDate = new Date(today);
-        const diffDays = Math.round((currentDate - lastDate) / (1000 * 60 * 60 * 24));
-
-        if (diffDays > 1) {
-          streakData.count = 0; // Reset streak if missed more than a day
-          localStorage.setItem('studyTrackerV4Streak', JSON.stringify(streakData));
-        }
-      }
-      updateStreakDisplay();
-    }
-
-    function updateStreakDisplay() {
+      localStorage.setItem('studyTrackerV5Streak', JSON.stringify(streakData));
       document.getElementById('stat-streak').innerText = `🔥 ${streakData.count} Day${streakData.count === 1 ? '' : 's'}`;
     }
 
-    /* Pomodoro Logic */
-    function setTimerMode(minutes, mode) {
-      clearInterval(timerInterval);
-      isTimerRunning = false;
-      document.getElementById('pomo-start-btn').innerText = 'Start';
-      
-      document.querySelectorAll('.pomo-mode-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById(`mode-${mode}`).classList.add('active');
-
-      timerDuration = minutes * 60;
-      timerRemaining = timerDuration;
-      updateTimerDisplay();
+    function saveData() {
+      localStorage.setItem('studyTrackerV5Data', JSON.stringify(studyData));
+      localStorage.setItem('studyTrackerV5Targets', JSON.stringify(dailyTargets));
+      populateSubjectFilter();
+      renderTargets();
+      renderTracker();
     }
 
-    function toggleTimer() {
-      if (isTimerRunning) {
-        clearInterval(timerInterval);
-        isTimerRunning = false;
-        document.getElementById('pomo-start-btn').innerText = 'Start';
-      } else {
-        isTimerRunning = true;
-        document.getElementById('pomo-start-btn').innerText = 'Pause';
-        recordActivity(); // Interacting with timer counts as activity
-
-        timerInterval = setInterval(() => {
-          if (timerRemaining > 0) {
-            timerRemaining--;
-            updateTimerDisplay();
-          } else {
-            clearInterval(timerInterval);
-            isTimerRunning = false;
-            document.getElementById('pomo-start-btn').innerText = 'Start';
-            alert('⏰ Pomodoro session completed! Take a well-deserved break.');
-          }
-        }, 1000);
-      }
-    }
-
-    function resetTimer() {
-      clearInterval(timerInterval);
-      isTimerRunning = false;
-      document.getElementById('pomo-start-btn').innerText = 'Start';
-      timerRemaining = timerDuration;
-      updateTimerDisplay();
-    }
-
-    function updateTimerDisplay() {
-      const m = Math.floor(timerRemaining / 60).toString().padStart(2, '0');
-      const s = (timerRemaining % 60).toString().padStart(2, '0');
-      document.getElementById('timer-display').innerText = `${m}:${s}`;
-    }
-
-    function toggleTheme() {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', newTheme);
-    }
-
+    /* Add Entry */
     function addEntry(e) {
       e.preventDefault();
-      
       const subjectName = document.getElementById('subject-input').value.trim();
       const bookName = document.getElementById('book-input').value.trim();
       const chapterName = document.getElementById('chapter-input').value.trim();
@@ -653,163 +371,120 @@
         name: chapterName,
         priority: priority,
         targetDate: targetDate || '',
-        lastUpdated: null,
+        difficulty: 'Standard', // Standard, Easy, Tough
+        note: '',
         tasks: tasksObj
       };
 
       book.chapters.push(chapter);
       document.getElementById('chapter-input').value = '';
-      
       recordActivity();
       saveData();
     }
 
-    function addCustomTaskColumn() {
-      const input = document.getElementById('custom-task-input');
-      const label = input.value.trim();
-      if (!label) return;
-
-      const key = 'custom_' + Date.now();
-      customTasks.push({ key, label });
-
-      studyData.forEach(s => s.books.forEach(b => b.chapters.forEach(c => {
-        if (c.tasks[key] === undefined) c.tasks[key] = 0;
-      })));
-
-      input.value = '';
+    function cycleDifficulty(subjectId, bookId, chapterId) {
+      const chapter = getChapter(subjectId, bookId, chapterId);
+      if (!chapter) return;
+      const modes = ['Standard', 'Easy', 'Tough'];
+      const nextIdx = (modes.indexOf(chapter.difficulty || 'Standard') + 1) % 3;
+      chapter.difficulty = modes[nextIdx];
       saveData();
+    }
+
+    function updateNote(subjectId, bookId, chapterId, text) {
+      const chapter = getChapter(subjectId, bookId, chapterId);
+      if (chapter) {
+        chapter.note = text;
+        localStorage.setItem('studyTrackerV5Data', JSON.stringify(studyData));
+      }
     }
 
     function cycleTaskStatus(subjectId, bookId, chapterId, taskKey) {
-      const subject = studyData.find(s => s.id === subjectId);
-      const book = subject.books.find(b => b.id === bookId);
-      const chapter = book.chapters.find(c => c.id === chapterId);
-
-      if (!chapter.tasks[taskKey]) chapter.tasks[taskKey] = 0;
-      chapter.tasks[taskKey] = (chapter.tasks[taskKey] + 1) % 3;
-      chapter.lastUpdated = new Date().toISOString();
-
-      recordActivity();
-      saveData();
+      const chapter = getChapter(subjectId, bookId, chapterId);
+      if (chapter) {
+        chapter.tasks[taskKey] = ((chapter.tasks[taskKey] || 0) + 1) % 3;
+        recordActivity();
+        saveData();
+      }
     }
 
-    function isRevisionDue(lastUpdated) {
-      if (!lastUpdated) return false;
-      const days = (new Date() - new Date(lastUpdated)) / (1000 * 60 * 60 * 24);
-      return days >= 14;
+    function getChapter(subjectId, bookId, chapterId) {
+      const s = studyData.find(s => s.id === subjectId);
+      const b = s?.books.find(b => b.id === bookId);
+      return b?.chapters.find(c => c.id === chapterId);
     }
 
     function deleteChapter(subjectId, bookId, chapterId) {
       const subject = studyData.find(s => s.id === subjectId);
-      const book = subject.books.find(b => b.id === bookId);
-      book.chapters = book.chapters.filter(c => c.id !== chapterId);
-
-      if (book.chapters.length === 0) subject.books = subject.books.filter(b => b.id !== bookId);
-      if (subject.books.length === 0) studyData = studyData.filter(s => s.id !== subjectId);
-
-      saveData();
-    }
-
-    function deleteSubject(subjectId) {
-      if (confirm('Delete this subject and all its chapters?')) {
-        studyData = studyData.filter(s => s.id !== subjectId);
+      const book = subject?.books.find(b => b.id === bookId);
+      if (book) {
+        book.chapters = book.chapters.filter(c => c.id !== chapterId);
+        if (book.chapters.length === 0) subject.books = subject.books.filter(b => b.id !== bookId);
+        if (subject.books.length === 0) studyData = studyData.filter(s => s.id !== subjectId);
         saveData();
       }
     }
 
     function populateSubjectFilter() {
       const filterSelect = document.getElementById('filter-subject');
-      const currentValue = filterSelect.value;
+      const val = filterSelect.value;
       filterSelect.innerHTML = '<option value="ALL">All Subjects</option>';
-
-      studyData.forEach(subject => {
-        const option = document.createElement('option');
-        option.value = subject.id;
-        option.textContent = subject.name;
-        filterSelect.appendChild(option);
+      studyData.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.id; opt.textContent = s.name;
+        filterSelect.appendChild(opt);
       });
-
-      filterSelect.value = currentValue;
-    }
-
-    function getChapterOverallStatus(tasks) {
-      const values = Object.values(tasks);
-      if (values.every(v => v === 2)) return 'DONE';
-      if (values.every(v => v === 0)) return 'NOT_STARTED';
-      return 'IN_PROGRESS';
-    }
-
-    function updateStatsAndProgress() {
-      let totalChapters = 0, completedChapters = 0, inProgressChapters = 0, dueRevisions = 0;
-      let totalWeight = 0, completedWeight = 0;
-
-      studyData.forEach(s => s.books.forEach(b => b.chapters.forEach(c => {
-        totalChapters++;
-        const status = getChapterOverallStatus(c.tasks);
-        if (status === 'DONE') completedChapters++;
-        if (status === 'IN_PROGRESS') inProgressChapters++;
-        if (status === 'DONE' && isRevisionDue(c.lastUpdated)) dueRevisions++;
-
-        Object.values(c.tasks).forEach(v => {
-          totalWeight += 2;
-          completedWeight += v;
-        });
-      })));
-
-      document.getElementById('stat-chapters').innerText = totalChapters;
-      document.getElementById('stat-completed').innerText = completedChapters;
-      document.getElementById('stat-progress').innerText = inProgressChapters;
-      document.getElementById('stat-due').innerText = dueRevisions;
-
-      const percentage = totalWeight === 0 ? 0 : Math.round((completedWeight / totalWeight) * 100);
-      document.getElementById('progress-bar').style.width = percentage + '%';
-      document.getElementById('progress-percent').innerText = percentage + '%';
+      filterSelect.value = val;
     }
 
     function renderTracker() {
       const container = document.getElementById('tracker-container');
       container.innerHTML = '';
 
-      const selectedSubject = document.getElementById('filter-subject').value;
-      const selectedPriority = document.getElementById('filter-priority').value;
-      const selectedStatus = document.getElementById('filter-status').value;
-      const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+      const selSub = document.getElementById('filter-subject').value;
+      const selStatus = document.getElementById('filter-status').value;
+      const search = document.getElementById('search-input').value.toLowerCase().trim();
 
-      let hasVisibleData = false;
+      let totalC = 0, completedC = 0, inProgC = 0;
 
       studyData.forEach(subject => {
-        if (selectedSubject !== 'ALL' && subject.id !== selectedSubject) return;
+        if (selSub !== 'ALL' && subject.id !== selSub) return;
 
         let booksHTML = '';
-
         subject.books.forEach(book => {
           let chaptersHTML = '';
 
           book.chapters.forEach(chapter => {
-            const matchesSearch = chapter.name.toLowerCase().includes(searchQuery);
-            const matchesPriority = selectedPriority === 'ALL' || chapter.priority === selectedPriority;
-            const chapterStatus = getChapterOverallStatus(chapter.tasks);
-            const matchesStatus = selectedStatus === 'ALL' || chapterStatus === selectedStatus;
+            totalC++;
+            const vals = Object.values(chapter.tasks);
+            const isDone = vals.every(v => v === 2);
+            const isNotStarted = vals.every(v => v === 0);
+            const statusStr = isDone ? 'DONE' : (isNotStarted ? 'NOT_STARTED' : 'IN_PROGRESS');
 
-            if (matchesSearch && matchesPriority && matchesStatus) {
-              let customTasksHTML = '';
+            if (isDone) completedC++;
+            else if (!isNotStarted) inProgC++;
+
+            if ((selStatus === 'ALL' || selStatus === statusStr) && chapter.name.toLowerCase().includes(search)) {
+              let tasksHTML = '';
               customTasks.forEach(t => {
-                const val = chapter.tasks[t.key] || 0;
-                customTasksHTML += `<td>${renderStatusBtn(subject.id, book.id, chapter.id, t.key, val)}</td>`;
+                const st = STATUS_STATES[chapter.tasks[t.key] || 0];
+                tasksHTML += `<td><button class="status-btn ${st.class}" onclick="cycleTaskStatus('${subject.id}', '${book.id}', '${chapter.id}', '${t.key}')">${st.label}</button></td>`;
               });
 
-              const revisionAlert = (chapterStatus === 'DONE' && isRevisionDue(chapter.lastUpdated))
-                ? `<div class="due-alert">⚠️ Revision Due</div>` : '';
+              const diffClass = chapter.difficulty === 'Easy' ? 'diff-easy' : (chapter.difficulty === 'Tough' ? 'diff-tough' : '');
 
               chaptersHTML += `
                 <tr>
                   <td>
-                    <span class="badge-priority p-${chapter.priority ? chapter.priority.toLowerCase() : 'medium'}">${chapter.priority || 'MEDIUM'}</span>
                     <strong>${chapter.name}</strong>
-                    ${chapter.targetDate ? `<div style="font-size:10px; color:var(--text-muted);">Target: ${chapter.targetDate}</div>` : ''}
-                    ${revisionAlert}
+                    <div style="margin-top: 4px;">
+                      <button class="difficulty-btn ${diffClass}" onclick="cycleDifficulty('${subject.id}', '${book.id}', '${chapter.id}')">${chapter.difficulty || 'Standard'}</button>
+                    </div>
                   </td>
-                  ${customTasksHTML}
+                  ${tasksHTML}
+                  <td>
+                    <textarea placeholder="Add chota note..." onblur="updateNote('${subject.id}', '${book.id}', '${chapter.id}', this.value)">${chapter.note || ''}</textarea>
+                  </td>
                   <td>
                     <button class="btn-danger" onclick="deleteChapter('${subject.id}', '${book.id}', '${chapter.id}')">Remove</button>
                   </td>
@@ -818,24 +493,15 @@
             }
           });
 
-          if (chaptersHTML !== '') {
-            hasVisibleData = true;
-
-            let dynamicHeaders = '';
-            customTasks.forEach(t => dynamicHeaders += `<th>${t.label}</th>`);
-
+          if (chaptersHTML) {
+            let taskHeaders = '';
+            customTasks.forEach(t => taskHeaders += `<th>${t.label}</th>`);
             booksHTML += `
               <div class="book-block">
                 <div class="book-title">📖 Book: ${book.name}</div>
                 <div class="table-responsive">
                   <table>
-                    <thead>
-                      <tr>
-                        <th>Chapter</th>
-                        ${dynamicHeaders}
-                        <th>Action</th>
-                      </tr>
-                    </thead>
+                    <thead><tr><th>Chapter</th>${taskHeaders}<th>Notes</th><th>Action</th></tr></thead>
                     <tbody>${chaptersHTML}</tbody>
                   </table>
                 </div>
@@ -844,70 +510,85 @@
           }
         });
 
-        if (booksHTML !== '') {
-          const subjectEl = document.createElement('div');
-          subjectEl.className = 'subject-card';
-          subjectEl.innerHTML = `
-            <div class="subject-header">
-              <h2>📚 ${subject.name}</h2>
-              <button class="btn-danger" onclick="deleteSubject('${subject.id}')">Delete Subject</button>
-            </div>
-            ${booksHTML}
-          `;
-          container.appendChild(subjectEl);
+        if (booksHTML) {
+          const card = document.createElement('div');
+          card.className = 'subject-card';
+          card.innerHTML = `<div class="subject-header"><h2>📚 ${subject.name}</h2></div>${booksHTML}`;
+          container.appendChild(card);
         }
       });
 
-      if (!hasVisibleData) {
-        container.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 30px;">No matching chapters found.</p>`;
-      }
-
-      updateStatsAndProgress();
+      document.getElementById('stat-chapters').innerText = totalC;
+      document.getElementById('stat-completed').innerText = completedC;
+      document.getElementById('stat-progress').innerText = inProgC;
+      
+      const pct = totalC === 0 ? 0 : Math.round((completedC / totalC) * 100);
+      document.getElementById('progress-bar').style.width = pct + '%';
+      document.getElementById('progress-percent').innerText = pct + '%';
     }
 
-    function renderStatusBtn(subjectId, bookId, chapterId, taskKey, statusVal) {
-      const stateInfo = STATUS_STATES[statusVal || 0];
-      return `<button class="status-btn ${stateInfo.class}" onclick="cycleTaskStatus('${subjectId}', '${bookId}', '${chapterId}', '${taskKey}')">${stateInfo.label}</button>`;
+    /* Exporting Functions */
+    function exportCSV() {
+      let csv = 'Subject,Book,Chapter,Difficulty,Notes,NotesStatus,RevisionStatus\n';
+      studyData.forEach(s => s.books.forEach(b => b.chapters.forEach(c => {
+        csv += `"${s.name}","${b.name}","${c.name}","${c.difficulty || 'Standard'}","${c.note || ''}","${c.tasks.notes}","${c.tasks.revision}"\n`;
+      })));
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `study_tracker_export.csv`;
+      a.click();
     }
 
-    function exportData() {
-      const payload = { studyData, customTasks, streakData };
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(payload, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `study_tracker_v4_backup.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
+    function exportJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ studyData, dailyTargets, streakData }, null, 2));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = `study_tracker_backup.json`;
+      a.click();
     }
 
     function importData(e) {
-      const fileReader = new FileReader();
-      fileReader.onload = function(event) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
         try {
-          const imported = JSON.parse(event.target.result);
-          if (imported.studyData) {
-            studyData = imported.studyData;
-            customTasks = imported.customTasks || customTasks;
-            streakData = imported.streakData || streakData;
-          } else if (Array.isArray(imported)) {
-            studyData = imported;
-          }
+          const data = JSON.parse(evt.target.result);
+          if (data.studyData) studyData = data.studyData;
+          if (data.dailyTargets) dailyTargets = data.dailyTargets;
           saveData();
-          updateStreakDisplay();
-          alert('Data imported successfully!');
-        } catch (err) {
-          alert('Invalid JSON file format.');
-        }
+          alert('Import successful!');
+        } catch (err) { alert('Invalid file format!'); }
       };
-      if (e.target.files[0]) {
-        fileReader.readAsText(e.target.files[0]);
-      }
+      if (e.target.files[0]) reader.readAsText(e.target.files[0]);
     }
 
-    // Initialize Page
-    checkStreakValidity();
+    /* Pomodoro Timer Functionality */
+    let timerRemaining = 25 * 60, timerInterval = null, isRunning = false;
+    function setTimerMode(min) {
+      clearInterval(timerInterval); isRunning = false;
+      document.getElementById('pomo-start-btn').innerText = 'Start';
+      timerRemaining = min * 60; updateTimerDisplay();
+    }
+    function toggleTimer() {
+      if (isRunning) { clearInterval(timerInterval); isRunning = false; document.getElementById('pomo-start-btn').innerText = 'Start'; }
+      else {
+        isRunning = true; document.getElementById('pomo-start-btn').innerText = 'Pause';
+        timerInterval = setInterval(() => {
+          if (timerRemaining > 0) { timerRemaining--; updateTimerDisplay(); }
+          else { clearInterval(timerInterval); isRunning = false; sendBrowserNotification('Pomodoro Session Complete!'); alert('Pomodoro Complete!'); }
+        }, 1000);
+      }
+    }
+    function resetTimer() { setTimerMode(25); }
+    function updateTimerDisplay() {
+      const m = Math.floor(timerRemaining / 60).toString().padStart(2, '0');
+      const s = (timerRemaining % 60).toString().padStart(2, '0');
+      document.getElementById('timer-display').innerText = `${m}:${s}`;
+    }
+
+    // Init
     populateSubjectFilter();
+    renderTargets();
     renderTracker();
   </script>
 </body>
